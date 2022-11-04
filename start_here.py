@@ -88,7 +88,7 @@ def start_index():
         game_4()
     if index_prompt == 5:
         game_5()
-        
+
 def fix_the_input_for_me(prompt):
     '''
     This function will return you an integer if the user actually wrote a number.
@@ -253,17 +253,16 @@ def game_5():
     no_of_mistakes = 0
 
     # Let's see how many mistakes were done ...  
-    for num in prompt_exc_5B:
+    for i, num in enumerate(prompt_exc_5B):
         colored_digit_to_add = f""
-        if num == string_of_100_correct_numbers[index]:
+        if num == string_of_100_correct_numbers[i]:
             colored_digit_to_add = f"{Fore.GREEN}{num}{Style.RESET_ALL}"
         else:
             colored_digit_to_add = f"{Fore.RED}{num}{Style.RESET_ALL}"
             no_of_mistakes += 1
         
         fully_colored_string = fully_colored_string + colored_digit_to_add
-        index += 1
-
+        
     # Give me the results
     print(Fore.GREEN + f'''
 
