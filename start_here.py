@@ -5,16 +5,34 @@ colorama.init(autoreset=True)
 
 import random
 
-welcome_to_pi = '''
-       _ 
-      (_)
- _ __  _ 
-| '_ \| |
-| |_) | |
-| .__/|_|
-| |      
-|_|   
+import time
+ 
+seconds = time.time()
+print("Time in seconds since the epoch:", seconds)
+local_time = time.ctime(seconds)
+print("Local time:", local_time)
 
+
+
+welcome_to_pi = '''  
+                                 ..;;;;;;;
+                               ,;;;;;;;;;'              P
+                             ,;;;;;;;\                  I
+                           ,;;;;;;;;  \                 
+                         ,;;;;;;;;     \                G
+                       ,;;;;;;;;        \               A
+                     ,;;;;;;;; ,,,,      \              M
+                   ,;;;;;;;; '     ',     \             E
+                 ,;;;;;;;;            ' . ,\,           S
+             .,;;;;;;;;_______________      \ ',        
+            /__________I             I__________I
+            I__________I_____________I___________I
+           [=MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM=]
+             { }        { }  III              { }
+             { }        { }  III              { }
+             { }       [__]  III              { }
+            _{ }             III              { }
+            [__]            O C O             [__]
 '''
 
 pi_2000_string = '''
@@ -66,9 +84,9 @@ pi_2000_string = '''
 pi_2000_string_clean = pi_2000_string.replace(" ", "").replace("\n", "")
 
 def start_index():
-    print('''
+    print(f'''
 πππππππππππππππππππππππππππ
-######### INDEX ###########
+{Fore.YELLOW}#########{Style.RESET_ALL} INDEX {Fore.YELLOW}###########{Style.RESET_ALL}
 πππππππππππππππππππππππππππ
 
 1 - Which specific digit of PI you want (for example the 473rd!) ?
@@ -95,7 +113,7 @@ def fix_the_input_for_me(prompt):
     If instead the user wrote B, it will send you back to the Index.
     If the user writes anything else, it will say that it is not a valid option and go back to the Index. 
     '''
-    my_input = input(f"{prompt} *** [B to go Back to the Index] *** \n")
+    my_input = input(Fore.CYAN + f"{prompt} *** [B to go Back to the Index] *** \n{Style.RESET_ALL}")
     my_input = my_input.upper()
     if my_input == "B":
         start_index()
@@ -107,7 +125,14 @@ def fix_the_input_for_me(prompt):
             print(Fore.RED + f"{my_input} is not a valid option. Bringing you back to the Index of Games!")
             start_index()
         return my_input
-    
+
+def countdown():
+    print(Fore.YELLOW + "READY?")
+    time.sleep(1)
+    print(f"{Style.RESET_ALL}SET ... ")
+    time.sleep(1)
+    print(Fore.GREEN + f"GO!{Style.RESET_ALL}")
+
 def game_1():
     ### 1st GAME ###
     ### Which specific digit of PI you want (for example the 473rd!) ?###
@@ -225,6 +250,7 @@ def game_5():
     if prompt_exc_5 not in allowed_values:
         print(Fore.RED + f"The value {prompt_exc_5} is not allowed. Please use one of the following values: {allowed_values} ")
         game_5()
+
     # Populate my list of 100 numbers
     for number in range(initial_index, final_index+1):
         list_of_100_correct_numbers.append(pi_2000_string_clean[number])
@@ -232,9 +258,15 @@ def game_5():
     # Create String of 100 numbers
     string_of_100_correct_numbers = f"".join(list_of_100_correct_numbers)
 
+    # Start the countdown
+    countdown()
+
+    # Start the clock
+    starttime = time.time()
+
     # Ask for the numbers from (human) memory
     prompt_exc_5B = input(f"Add here the numbers out of YOUR memory! *** [B to go Back to the Index] *** \n")
-
+    
     # Clean Prompt of all the spaces
     prompt_exc_5B = prompt_exc_5B.replace(" ", "").replace("\n", "")
 
@@ -242,6 +274,9 @@ def game_5():
     while len(prompt_exc_5B) > 100:
         prompt_len = len(prompt_exc_5B)
         prompt_exc_5B = input(f"You gave too many numbers {prompt_len}! Try to reinsert precisely 100 digits. *** [B to go Back to the Index] *** \n")
+    
+    # Stop the clock
+    totaltime = round((time.time() - starttime), 2)
 
     # Check the case in which the numbers from memory are less than 100. I will add Xes until i reach 100
     while len(prompt_exc_5B) != 100:
@@ -263,26 +298,24 @@ def game_5():
         fully_colored_string = fully_colored_string + colored_digit_to_add
         
     # Give me the results
-    print(Fore.GREEN + f'''
+    print(f'''
 
-πππππππππππππππππππππππππππ
-π   {fully_colored_string}                
-π   {string_of_100_correct_numbers}         
-π   Mistakes: {no_of_mistakes}
-πππππππππππππππππππππππππππ
+ππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππ
+{fully_colored_string}                                                                                
+{string_of_100_correct_numbers}                                                                       
+Mistakes: {no_of_mistakes}
+Total time: {totaltime} seconds                                                                      
+ππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππ
 
 ''')
 
     game_5()
  
-    
 ### WELCOME! ###
-print(Fore.GREEN + f'''
-
+print(f'''
 πππππππππππππππππππππππππππ
-### WELCOME TO ∏ GAMES! ###
+{Fore.YELLOW}### WELCOME TO ∏ GAMES! ###{Style.RESET_ALL}
 πππππππππππππππππππππππππππ
-
 ''')
 print(welcome_to_pi)
 
