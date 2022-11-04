@@ -249,7 +249,6 @@ def game_5():
 
     # Initialize variables for the loop
     fully_colored_string = f""
-    index = 0
     no_of_mistakes = 0
 
     # Let's see how many mistakes were done ...  
