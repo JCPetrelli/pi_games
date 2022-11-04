@@ -75,6 +75,7 @@ def start_index():
 2 - Tell me a randomth digit of π!
 3 - Revision of π in series of 10 digits. 
 4 - Revision of π in series of 100 digits. 
+5 - Write 100 digits and I will check if they are correct.
     ''')
     index_prompt = fix_the_input_for_me("Select your π game! [1 to 10]")
     if index_prompt == 1:
@@ -85,7 +86,9 @@ def start_index():
         game_3()
     if index_prompt == 4:
         game_4()
-
+    if index_prompt == 5:
+        game_5()
+        
 def fix_the_input_for_me(prompt):
     '''
     This function will return you an integer if the user actually wrote a number.
@@ -172,7 +175,6 @@ def game_3():
 def game_4():
     ### 4nd GAME ###
     ### Revision of π in series of 100 digits ###
-
     list_of_100_numbers = []
     string_of_100_numbers = ""
     allowed_values = list(range(1, 21))
@@ -204,6 +206,78 @@ def game_4():
 ''')
 
     game_4()
+
+    
+def game_5():
+    ### 5th GAME i##
+    ### 5 - Write 100 digits and I will check if they are correct.###
+
+    list_of_100_correct_numbers = []
+    string_of_100_correct_numbers = ""
+    allowed_values = list(range(1, 21))
+    prompt_exc_5 = fix_the_input_for_me(f"Which series of 100 digits do you want to revise? (1 to 20) ")
+
+    # Example with 5: If I want the fifth series of 100 numbers, initial index must be the 401st and the final index must be the 500th.
+    initial_index = (prompt_exc_5 * 100) - 99
+    final_index = (prompt_exc_5 * 100) 
+
+    # Be sure that prompt5 is only between 1 and 20:
+    if prompt_exc_5 not in allowed_values:
+        print(Fore.RED + f"The value {prompt_exc_5} is not allowed. Please use one of the following values: {allowed_values} ")
+        game_5()
+    # Populate my list of 100 numbers
+    for number in range(initial_index, final_index+1):
+        list_of_100_correct_numbers.append(pi_2000_string_clean[number])
+    
+    # Create String of 100 numbers
+    string_of_100_correct_numbers = f"".join(list_of_100_correct_numbers)
+
+    # Ask for the numbers from (human) memory
+    prompt_exc_5B = input(f"Add here the numbers out of YOUR memory! *** [B to go Back to the Index] *** \n")
+
+    # Clean Prompt of all the spaces
+    prompt_exc_5B = prompt_exc_5B.replace(" ", "").replace("\n", "")
+
+    # Check the case in which the numbers from memory are more than 100
+    while len(prompt_exc_5B) > 100:
+        prompt_len = len(prompt_exc_5B)
+        prompt_exc_5B = input(f"You gave too many numbers {prompt_len}! Try to reinsert precisely 100 digits. *** [B to go Back to the Index] *** \n")
+
+    # Check the case in which the numbers from memory are less than 100. I will add Xes until i reach 100
+    while len(prompt_exc_5B) != 100:
+        prompt_exc_5B += "X"
+
+    # Initialize variables for the loop
+    fully_colored_string = f""
+    index = 0
+    no_of_mistakes = 0
+
+    # Let's see how many mistakes were done ...  
+    for num in prompt_exc_5B:
+        colored_digit_to_add = f""
+        if num == string_of_100_correct_numbers[index]:
+            colored_digit_to_add = f"{Fore.GREEN}{num}{Style.RESET_ALL}"
+        else:
+            colored_digit_to_add = f"{Fore.RED}{num}{Style.RESET_ALL}"
+            no_of_mistakes += 1
+        
+        fully_colored_string = fully_colored_string + colored_digit_to_add
+        index += 1
+
+    # Give me the results
+    print(Fore.GREEN + f'''
+
+πππππππππππππππππππππππππππ
+π   {fully_colored_string}                
+π   {string_of_100_correct_numbers}         
+π   Mistakes: {no_of_mistakes}
+πππππππππππππππππππππππππππ
+
+''')
+
+    game_5()
+ 
+    
 ### WELCOME! ###
 print(Fore.GREEN + f'''
 
