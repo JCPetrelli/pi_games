@@ -4,16 +4,8 @@ from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
 import random
-
 import time
  
-seconds = time.time()
-print("Time in seconds since the epoch:", seconds)
-local_time = time.ctime(seconds)
-print("Local time:", local_time)
-
-
-
 welcome_to_pi = '''  
                                  ..;;;;;;;
                                ,;;;;;;;;;'              P
@@ -106,6 +98,8 @@ def start_index():
         game_4()
     if index_prompt == 5:
         game_5()
+    if index_prompt == 6:
+        game_6()
 
 def fix_the_input_for_me(prompt):
     '''
@@ -311,6 +305,13 @@ Total time: {totaltime} seconds
 
     game_5()
  
+
+def game_6():
+    from pi_to_100000 import pi_to_100000
+    ### Cleaning-up my first 50000 digits of π from whitespace and \n ...
+    pi_to_100000 = pi_to_100000.replace(" ", "").replace("\n", "")
+    print(len(pi_to_100000))
+
 ### WELCOME! ###
 print(f'''
 πππππππππππππππππππππππππππ
