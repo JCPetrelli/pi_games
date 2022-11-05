@@ -5,7 +5,9 @@ colorama.init(autoreset=True)
 
 import random
 import time
- 
+import os
+
+
 welcome_to_pi = '''  
                                  ..;;;;;;;
                                ,;;;;;;;;;'              P
@@ -85,7 +87,8 @@ def start_index():
 2 - Tell me a randomth digit of π!
 3 - Revision of π in series of 10 digits. 
 4 - Revision of π in series of 100 digits. 
-5 - Write 100 digits and I will check if they are correct.
+5 - Write 100 digits of π from the first 2000 and I will check if they are correct.
+6 - I give you 100 digits of π from the first 100.000 and you memorize them. Let's see how much time you need and how many mistakes you do :-)
     ''')
     index_prompt = fix_the_input_for_me("Select your π game! [1 to 10]")
     if index_prompt == 1:
@@ -104,14 +107,20 @@ def start_index():
 def fix_the_input_for_me(prompt):
     '''
     This function will return you an integer if the user actually wrote a number.
-    If instead the user wrote B, it will send you back to the Index.
-    If the user writes anything else, it will say that it is not a valid option and go back to the Index. 
+    - If the user inputs B, it will go back to the Index.
+    - If the user inputs Y, it will return Y and do nothing else
+    - If the user do not input anything, it will return None
+    - If the user writes anything else, it will say that it is not a valid option and go back to the Index. 
     '''
     my_input = input(Fore.CYAN + f"{prompt} *** [B to go Back to the Index] *** \n{Style.RESET_ALL}")
     my_input = my_input.upper()
     if my_input == "B":
         start_index()
         exit()
+    elif my_input == "Y":
+        return "Y"
+    elif my_input == "": # Pressing Enter without value
+        return None
     else:
         try: 
             my_input = int(my_input)
@@ -121,11 +130,13 @@ def fix_the_input_for_me(prompt):
         return my_input
 
 def countdown():
+    print()
     print(Fore.YELLOW + "READY?")
     time.sleep(1)
     print(f"{Style.RESET_ALL}SET ... ")
     time.sleep(1)
     print(Fore.GREEN + f"GO!{Style.RESET_ALL}")
+    print()
 
 def game_1():
     ### 1st GAME ###
@@ -228,7 +239,7 @@ def game_4():
 
     
 def game_5():
-    ### 5th GAME i##
+    ### 5th GAME ###
     ### 5 - Write 100 digits and I will check if they are correct.###
 
     list_of_100_correct_numbers = []
@@ -267,7 +278,7 @@ def game_5():
     # Check the case in which the numbers from memory are more than 100
     while len(prompt_exc_5B) > 100:
         prompt_len = len(prompt_exc_5B)
-        prompt_exc_5B = input(f"You gave too many numbers {prompt_len}! Try to reinsert precisely 100 digits. *** [B to go Back to the Index] *** \n")
+        prompt_exc_5B = input(f"You gave too many numbers ({prompt_len})! Try to reinsert precisely 100 digits. *** [B to go Back to the Index] *** \n")
     
     # Stop the clock
     totaltime = round((time.time() - starttime), 2)
@@ -307,10 +318,95 @@ Total time: {totaltime} seconds
  
 
 def game_6():
+
+    ### 6th GAME ###
+    ### 6 - I give you 100 digits from the first 100.000 digits of π and you memorize them.###
+
+    # Import the Biggie
     from pi_to_100000 import pi_to_100000
-    ### Cleaning-up my first 50000 digits of π from whitespace and \n ...
+
+    ### Cleaning-up my first 100.000 digits of π from whitespace and \n ...
     pi_to_100000 = pi_to_100000.replace(" ", "").replace("\n", "")
-    print(len(pi_to_100000))
+    
+    prompt_6A = fix_the_input_for_me('''After you say yes, I will show you 100 digits of π (taken randomly between the first 100.000) and the timer will start. Are you Ready? (Y for Yes)''')
+    
+    # If input is Yes or None continue
+    if prompt_6A != "Y" and prompt_6A != None:
+        start_index()
+    random_series_of_100_digits_no = random.randint(21, 1000) # I do not want the first 2000 digits of π that I already memorized
+    initial_index = (random_series_of_100_digits_no * 100) - 99
+    final_index = (random_series_of_100_digits_no * 100)
+
+    # Initialize list
+    list_of_numbers_to_show = []
+
+    # Populate my list of 100 numbers
+    for number in range(initial_index, final_index+1):
+        list_of_numbers_to_show.append(pi_to_100000[number])
+    
+    # Create String of 100 numbers
+    string_of_numbers_to_show = f"".join(list_of_numbers_to_show)
+
+    countdown()
+
+    # Start the clock
+    starttime = time.time()
+    
+    print(f"******************* FROM {initial_index} *******************")
+    print(f'{string_of_numbers_to_show}')
+    print(f"*******************  TO {final_index}  *******************")
+
+    prompt_6B = input("Press Enter when you are done and I will stop the timer.")
+
+    # Clean the Terminal
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    # Stop the clock
+    totaltime = round((time.time() - starttime), 2)
+    print("Total time used to memorize: ", totaltime, "seconds.")
+
+    prompt_6C = input("Insert here the numbers you memorized and press Enter ...\n")
+
+    # Clean Prompt of all the spaces
+    prompt_6C = prompt_6C.replace(" ", "").replace("\n", "")
+
+    # Check the case in which the numbers from memory are more than 100
+    while len(prompt_6C) > 100:
+        prompt_len = len(prompt_6C)
+        prompt_6C = input(f"You gave too many numbers ({prompt_len})! Try to reinsert precisely 100 digits. *** [B to go Back to the Index] *** \n")
+    
+    # Check the case in which the numbers from memory are less than 100. I will add Xes until i reach 100
+    while len(prompt_6C) != 100:
+        prompt_6C += "X"
+
+    # Initialize variables for the loop
+    fully_colored_string = f""
+    no_of_mistakes = 0
+
+    # Let's see how many mistakes were done ...  
+    for i, num in enumerate(prompt_6C):
+        colored_digit_to_add = f""
+        if num == string_of_numbers_to_show[i]:
+            colored_digit_to_add = f"{Fore.GREEN}{num}{Style.RESET_ALL}"
+        else:
+            colored_digit_to_add = f"{Fore.RED}{num}{Style.RESET_ALL}"
+            no_of_mistakes += 1
+        
+        fully_colored_string = fully_colored_string + colored_digit_to_add
+        
+    # Give me the results
+    print(f'''
+
+ππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππ
+{fully_colored_string}                                                                                
+{string_of_numbers_to_show}                                                                       
+Mistakes: {no_of_mistakes}
+Total time used to memorize: {totaltime} seconds                                                                      
+ππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππ
+
+''')
+
+    game_6()
 
 ### WELCOME! ###
 print(f'''
