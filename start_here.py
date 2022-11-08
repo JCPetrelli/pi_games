@@ -2,10 +2,12 @@ import string
 import colorama
 from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
+import db_functions as db
 
 import random
 import time
 import os
+
 
 
 welcome_to_pi = '''  
@@ -82,13 +84,15 @@ def start_index():
 πππππππππππππππππππππππππππ
 {Fore.YELLOW}#########{Style.RESET_ALL} INDEX {Fore.YELLOW}###########{Style.RESET_ALL}
 πππππππππππππππππππππππππππ
+[Legend - T = with Timer, DB = with Database]
+{Fore.YELLOW}1{Style.RESET_ALL} - Which specific digit of PI you want (for example the 473rd!) ?
+{Fore.YELLOW}2{Style.RESET_ALL} - Tell me a randomth digit of π! [Excercise, No Timer, No DB]
+{Fore.YELLOW}3{Style.RESET_ALL} - Study of π in series of 10 digits. 
+{Fore.YELLOW}4{Style.RESET_ALL} - Study of π in series of 100 digits. 
+{Fore.YELLOW}5{Style.RESET_ALL} - [T, DB] Write 100 digits of π from the first 2000 and I will check if they are correct. 
+{Fore.YELLOW}6{Style.RESET_ALL} - [T, DB] I give you 100 digits of π from the first 100.000 and you memorize them. Let's see how much time you need and how many mistakes you do :-)
 
-1 - Which specific digit of PI you want (for example the 473rd!) ?
-2 - Tell me a randomth digit of π!
-3 - Revision of π in series of 10 digits. 
-4 - Revision of π in series of 100 digits. 
-5 - Write 100 digits of π from the first 2000 and I will check if they are correct.
-6 - I give you 100 digits of π from the first 100.000 and you memorize them. Let's see how much time you need and how many mistakes you do :-)
+[Legend / T = with Timer, DB = with Database]
     ''')
     index_prompt = fix_the_input_for_me("Select your π game! [1 to 10]")
     if index_prompt == 1:
@@ -149,7 +153,6 @@ def game_1():
     print(f"The {prompt_exc_1} digit of π is: {pi_2000_string_clean[digit_i_want]}")
     game_1()
 
-
 def game_2():
     ### 2nd GAME ###
     ### Tell me a randomth digit of π! ###
@@ -201,7 +204,6 @@ def game_3():
     
     game_3()
 
-
 def game_4():
     ### 4nd GAME ###
     ### Revision of π in series of 100 digits ###
@@ -237,7 +239,6 @@ def game_4():
 
     game_4()
 
-    
 def game_5():
     ### 5th GAME ###
     ### 5 - Write 100 digits and I will check if they are correct.###
@@ -251,6 +252,7 @@ def game_5():
     initial_index = (prompt_exc_5 * 100) - 99
     final_index = (prompt_exc_5 * 100) 
 
+    pi_series_used = f"{initial_index}_{final_index}"
     # Be sure that prompt5 is only between 1 and 20:
     if prompt_exc_5 not in allowed_values:
         print(Fore.RED + f"The value {prompt_exc_5} is not allowed. Please use one of the following values: {allowed_values} ")
@@ -291,7 +293,8 @@ def game_5():
     fully_colored_string = f""
     no_of_mistakes = 0
 
-    # Let's see how many mistakes were done ...  
+    # Let's see how many mistakes were done ... 
+    mistakes_dictionary = {}
     for i, num in enumerate(prompt_exc_5B):
         colored_digit_to_add = f""
         if num == string_of_100_correct_numbers[i]:
@@ -299,6 +302,12 @@ def game_5():
         else:
             colored_digit_to_add = f"{Fore.RED}{num}{Style.RESET_ALL}"
             no_of_mistakes += 1
+
+            # Populate the mistakes_dictionary
+            mistaken_digit = num
+            mistaken_digit_position = initial_index + i
+            mistaken_digit_correct = pi_2000_string_clean[mistaken_digit_position]
+            mistakes_dictionary[mistaken_digit_position] = [mistaken_digit, mistaken_digit_correct]
         
         fully_colored_string = fully_colored_string + colored_digit_to_add
         
@@ -314,9 +323,27 @@ Total time: {totaltime} seconds
 
 ''')
 
+### DB OPERATIONS ###
+    # Initializing db variables
+    conn, c = db.create_database("sessions")
+    db.create_table(conn, c, 'sessions')
+
+    mistakes_dictionary = str(mistakes_dictionary)
+    # Write in the database
+    session_dictionary = {
+    "game_no" : 5,
+    "date" : time.time(),
+    "mistakes_no" : no_of_mistakes,
+    "mistakes" : mistakes_dictionary,
+    "time" : totaltime,
+    "pi_series": pi_series_used
+    }
+
+    db.add_new_session(conn, c, session_dictionary)
+    db.close_connection(conn)
+
     game_5()
  
-
 def game_6():
 
     ### 6th GAME ###
@@ -353,9 +380,13 @@ def game_6():
     starttime = time.time()
     
     print(f"******************* FROM {initial_index} *******************")
+    print()
     print(f'{string_of_numbers_to_show}')
+    print()
     print(f"*******************  TO {final_index}  *******************")
-
+    print()
+    print()
+    pi_series_used = f"{initial_index}_{final_index}"
     prompt_6B = input("Press Enter when you are done and I will stop the timer.")
 
     # Clean the Terminal
@@ -384,6 +415,7 @@ def game_6():
     no_of_mistakes = 0
 
     # Let's see how many mistakes were done ...  
+    mistakes_dictionary = {}
     for i, num in enumerate(prompt_6C):
         colored_digit_to_add = f""
         if num == string_of_numbers_to_show[i]:
@@ -391,6 +423,13 @@ def game_6():
         else:
             colored_digit_to_add = f"{Fore.RED}{num}{Style.RESET_ALL}"
             no_of_mistakes += 1
+
+            # Populate the mistakes_dictionary
+            mistaken_digit = num
+            mistaken_digit_position = initial_index + i
+            mistaken_digit_correct = pi_to_100000[mistaken_digit_position]
+            mistakes_dictionary[mistaken_digit_position] = [mistaken_digit, mistaken_digit_correct]
+
         
         fully_colored_string = fully_colored_string + colored_digit_to_add
         
@@ -405,6 +444,25 @@ Total time used to memorize: {totaltime} seconds
 ππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππππ
 
 ''')
+
+    ### DB OPERATIONS ###
+    # Initializing db variables
+    conn, c = db.create_database("sessions")
+    db.create_table(conn, c, 'sessions')
+
+    mistakes_dictionary = str(mistakes_dictionary)
+    # Write in the database
+    session_dictionary = {
+    "game_no" : 6,
+    "date" : time.time(),
+    "mistakes_no" : no_of_mistakes,
+    "mistakes" : mistakes_dictionary,
+    "time" : totaltime,
+    "pi_series": pi_series_used
+    }
+
+    db.add_new_session(conn, c, session_dictionary)
+    db.close_connection(conn)
 
     game_6()
 
