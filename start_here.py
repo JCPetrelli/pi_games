@@ -86,7 +86,7 @@ def start_index():
 πππππππππππππππππππππππππππ
 [Legend - T = with Timer, DB = with Database]
 {Fore.YELLOW}1{Style.RESET_ALL} - Which specific digit of PI you want (for example the 473rd!) ?
-{Fore.YELLOW}2{Style.RESET_ALL} - Tell me a randomth digit of π! [Excercise, No Timer, No DB]
+{Fore.YELLOW}2{Style.RESET_ALL} - Tell me a randomth digit of π!
 {Fore.YELLOW}3{Style.RESET_ALL} - Study of π in series of 10 digits. 
 {Fore.YELLOW}4{Style.RESET_ALL} - Study of π in series of 100 digits. 
 {Fore.YELLOW}5{Style.RESET_ALL} - [T, DB] Write 100 digits of π from the first 2000 and I will check if they are correct. 
