@@ -7,6 +7,7 @@ import db_functions as db
 import random
 import time
 import os
+from simple_term_menu import TerminalMenu
 
 
 
@@ -80,32 +81,44 @@ pi_2000_string = '''
 pi_2000_string_clean = pi_2000_string.replace(" ", "").replace("\n", "")
 
 def start_index():
-    print(f'''
-πππππππππππππππππππππππππππ
-{Fore.YELLOW}#########{Style.RESET_ALL} INDEX {Fore.YELLOW}###########{Style.RESET_ALL}
-πππππππππππππππππππππππππππ
-[Legend - T = with Timer, DB = with Database]
-{Fore.YELLOW}1{Style.RESET_ALL} - Which specific digit of PI you want (for example the 473rd!) ?
-{Fore.YELLOW}2{Style.RESET_ALL} - Tell me a randomth digit of π!
-{Fore.YELLOW}3{Style.RESET_ALL} - Study of π in series of 10 digits. 
-{Fore.YELLOW}4{Style.RESET_ALL} - Study of π in series of 100 digits. 
-{Fore.YELLOW}5{Style.RESET_ALL} - [T, DB] Write 100 digits of π from the first 2000 and I will check if they are correct. 
-{Fore.YELLOW}6{Style.RESET_ALL} - [T, DB] I give you 100 digits of π from the first 100.000 and you memorize them. Let's see how much time you need and how many mistakes you do :-)
 
-[Legend / T = with Timer, DB = with Database]
-    ''')
-    index_prompt = fix_the_input_for_me("Select your π game! [1 to 10]")
-    if index_prompt == 1:
+    option1 = "[1] - Which specific digit of PI you want (for example the 473rd!) ?"
+    option2 = "[2] - Tell me a randomth digit of π!"
+    option3 = "[3] - Study of π in series of 10 digits."
+    option4 = "[4] - Study of π in series of 100 digits."
+    option5 = "[5] - [T, DB] Write 100 digits of π from the first 2000 and I will check if they are correct."
+    option6 = "[6] - [T, DB] I give you 100 digits of π from the first 100.000 and you memorize them. Let's see how much time you need and how many mistakes you do :-)"
+    
+    options = [ option1, option2, option3, option4, option5, option6]
+
+    terminal_menu = TerminalMenu(options,
+    title="Choose your game!",
+    show_multi_select_hint=True,
+    menu_cursor="π ",
+    exit_on_shortcut=False,
+    status_bar="[Legend - T = with Timer, DB = with Database]",
+    shortcut_key_highlight_style = ("fg_yellow",)
+    # accept_keys=("1", "2", "3", "4", "5", "6"),
+    
+    
+    )
+    menu_entry_index = terminal_menu.show()
+    print(Fore.YELLOW + f"You have selected {options[menu_entry_index]}!")
+    print()
+
+    user_choice = options[menu_entry_index]
+
+    if user_choice == option1:
         game_1()
-    if index_prompt == 2:
+    if user_choice == option2:
         game_2()
-    if index_prompt == 3:
+    if user_choice == option3:
         game_3()
-    if index_prompt == 4:
+    if user_choice == option4:
         game_4()
-    if index_prompt == 5:
+    if user_choice == option5:
         game_5()
-    if index_prompt == 6:
+    if user_choice == option6:
         game_6()
 
 def fix_the_input_for_me(prompt):
