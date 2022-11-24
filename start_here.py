@@ -1,17 +1,14 @@
-import string
+import random
 import colorama
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 colorama.init(autoreset=True)
 import db_functions as db
 
-import random
 import time
 import os
 from simple_term_menu import TerminalMenu
 
-
-
-welcome_to_pi = '''  
+welcome_to_pi = r'''  
                                  ..;;;;;;;
                                ,;;;;;;;;;'              P
                              ,;;;;;;;\                  I
@@ -87,8 +84,7 @@ def start_index():
     option3 = "[3] - Study of π in series of 10 digits."
     option4 = "[4] - Study of π in series of 100 digits."
     option5 = "[5] - [T, DB] Write 100 digits of π from the first 2000 and I will check if they are correct."
-    option6 = "[6] - [T, DB] I give you 100 digits of π from the first 100.000 and you memorize them. Let's see how much time you need and how many mistakes you do :-)"
-    
+    option6 = "[6] - [T, DB] I give you 100 digits of π from the first 100.000 and you memorize them :-)"
     options = [ option1, option2, option3, option4, option5, option6]
 
     terminal_menu = TerminalMenu(options,
@@ -99,8 +95,6 @@ def start_index():
     status_bar="[Legend - T = with Timer, DB = with Database]",
     shortcut_key_highlight_style = ("fg_yellow",)
     # accept_keys=("1", "2", "3", "4", "5", "6"),
-    
-    
     )
     menu_entry_index = terminal_menu.show()
     print(Fore.YELLOW + f"You have selected {options[menu_entry_index]}!")
@@ -127,8 +121,7 @@ def fix_the_input_for_me(prompt):
     - If the user inputs B, it will go back to the Index.
     - If the user inputs Y, it will return Y and do nothing else
     - If the user do not input anything, it will return None
-    - If the user writes anything else, it will say that it is not a valid option and go back to the Index. 
-    '''
+    - If the user writes anything else, it will say that it is not a valid option and go back to the Index.'''
     my_input = input(Fore.CYAN + f"{prompt} *** [B to go Back to the Index] *** \n{Style.RESET_ALL}")
     my_input = my_input.upper()
     if my_input == "B":
@@ -147,6 +140,7 @@ def fix_the_input_for_me(prompt):
         return my_input
 
 def countdown():
+    '''Simple countdown of 3 seconds.'''
     print()
     print(Fore.YELLOW + "READY?")
     time.sleep(1)
@@ -156,8 +150,8 @@ def countdown():
     print()
 
 def game_1():
-    ### 1st GAME ###
-    ### Which specific digit of PI you want (for example the 473rd!) ?###
+    '''### 1st GAME ###
+    ### Which specific digit of PI you want (for example the 473rd!) ?###'''
 
     digit_i_want = 473
     prompt_exc_1 = fix_the_input_for_me("Which specific digit of PI you want [from 1 to 2000] ?")
@@ -167,8 +161,8 @@ def game_1():
     game_1()
 
 def game_2():
-    ### 2nd GAME ###
-    ### Tell me a randomth digit of π! ###
+    '''### 2nd GAME ###
+    ### Tell me a randomth digit of π! ###'''
 
     random_digit = random.randint(1, 2000)
     prompt_exc_2 = fix_the_input_for_me(f"What is the {random_digit} digit of π?")
@@ -180,16 +174,16 @@ def game_2():
     game_2()
 
 def game_3():
-    ### 3rd GAME ###
-    ### Revision of π in series of 10 digits. Which series of 100 digits do you want to revise? (From 1 to 20) ###
+    '''### 3rd GAME ###
+    ### Revision of π in series of 10 digits. Which series of 100 digits do you want to revise? (From 1 to 20) ###'''
 
-    random_digit = random.randint(1, 2000)
-    prompt_exc_3 = fix_the_input_for_me(f"Which series of 10 digits do you want to revise? (From 1 to 200)")
+    prompt_exc_3 = fix_the_input_for_me("Which series of 10 digits do you want to revise? (From 1 to 200)")
 
     allowed_values = list(range(1, 201))
     if prompt_exc_3 not in allowed_values:
         print(Fore.RED + f"The value {prompt_exc_3} is not allowed. Please use one of the following values: {allowed_values} ")
         game_3()
+        
     # Example with 5: If I want the fifth series of 10 numbers, initial index must be the 41st and the final index must be the 50th.
     initial_index = 41
     final_index = 50
@@ -203,7 +197,7 @@ def game_3():
         list_of_10_numbers.append(pi_2000_string_clean[number])
     
     # Create String of 10 numbers
-    string_of_10_numbers = f"".join(list_of_10_numbers)
+    string_of_10_numbers = "".join(list_of_10_numbers)
 
     print(Fore.GREEN + f'''
 
@@ -218,12 +212,12 @@ def game_3():
     game_3()
 
 def game_4():
-    ### 4nd GAME ###
-    ### Revision of π in series of 100 digits ###
+    '''### 4nd GAME ###
+    ### Revision of π in series of 100 digits ###'''
     list_of_100_numbers = []
     string_of_100_numbers = ""
     allowed_values = list(range(1, 21))
-    prompt_exc_4 = fix_the_input_for_me(f"Which series of 100 digits do you want to revise? (1 to 20) ")
+    prompt_exc_4 = fix_the_input_for_me("Which series of 100 digits do you want to revise? (1 to 20) ")
 
     # Example with 5: If I want the fifth series of 100 numbers, initial index must be the 401st and the final index must be the 500th.
     initial_index = (prompt_exc_4 * 100) - 99
@@ -238,7 +232,7 @@ def game_4():
         list_of_100_numbers.append(pi_2000_string_clean[number])
     
     # Create String of 100 numbers
-    string_of_100_numbers = f"".join(list_of_100_numbers)
+    string_of_100_numbers = "".join(list_of_100_numbers)
 
     print(Fore.GREEN + f'''
 
@@ -253,13 +247,13 @@ def game_4():
     game_4()
 
 def game_5():
-    ### 5th GAME ###
-    ### 5 - Write 100 digits and I will check if they are correct.###
+    '''### 5th GAME ###
+    ### 5 - Write 100 digits and I will check if they are correct.###'''
 
     list_of_100_correct_numbers = []
     string_of_100_correct_numbers = ""
     allowed_values = list(range(1, 21))
-    prompt_exc_5 = fix_the_input_for_me(f"Which series of 100 digits do you want to revise? (1 to 20) ")
+    prompt_exc_5 = fix_the_input_for_me("Which series of 100 digits do you want to revise? (1 to 20) ")
 
     # Example with 5: If I want the fifth series of 100 numbers, initial index must be the 401st and the final index must be the 500th.
     initial_index = (prompt_exc_5 * 100) - 99
@@ -276,7 +270,7 @@ def game_5():
         list_of_100_correct_numbers.append(pi_2000_string_clean[number])
     
     # Create String of 100 numbers
-    string_of_100_correct_numbers = f"".join(list_of_100_correct_numbers)
+    string_of_100_correct_numbers = "".join(list_of_100_correct_numbers)
 
     # Start the countdown
     countdown()
@@ -285,7 +279,7 @@ def game_5():
     starttime = time.time()
 
     # Ask for the numbers from (human) memory
-    prompt_exc_5B = input(f"Add here the numbers out of YOUR memory! *** [B to go Back to the Index] *** \n")
+    prompt_exc_5B = input("Add here the numbers out of YOUR memory! *** [B to go Back to the Index] *** \n")
     
     # Clean Prompt of all the spaces
     prompt_exc_5B = prompt_exc_5B.replace(" ", "").replace("\n", "")
@@ -303,13 +297,13 @@ def game_5():
         prompt_exc_5B += "X"
 
     # Initialize variables for the loop
-    fully_colored_string = f""
+    fully_colored_string = ""
     no_of_mistakes = 0
 
     # Let's see how many mistakes were done ... 
     mistakes_dictionary = {}
     for i, num in enumerate(prompt_exc_5B):
-        colored_digit_to_add = f""
+        colored_digit_to_add = ""
         if num == string_of_100_correct_numbers[i]:
             colored_digit_to_add = f"{Fore.GREEN}{num}{Style.RESET_ALL}"
         else:
@@ -385,7 +379,7 @@ def game_6():
         list_of_numbers_to_show.append(pi_to_100000[number])
     
     # Create String of 100 numbers
-    string_of_numbers_to_show = f"".join(list_of_numbers_to_show)
+    string_of_numbers_to_show = "".join(list_of_numbers_to_show)
 
     countdown()
 
@@ -400,7 +394,7 @@ def game_6():
     print()
     print()
     pi_series_used = f"{initial_index}_{final_index}"
-    prompt_6B = input("Press Enter when you are done and I will stop the timer.")
+    input("Press Enter when you are done and I will stop the timer.")
 
     # Clean the Terminal
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -424,13 +418,13 @@ def game_6():
         prompt_6C += "X"
 
     # Initialize variables for the loop
-    fully_colored_string = f""
+    fully_colored_string = ""
     no_of_mistakes = 0
 
     # Let's see how many mistakes were done ...  
     mistakes_dictionary = {}
     for i, num in enumerate(prompt_6C):
-        colored_digit_to_add = f""
+        colored_digit_to_add = ""
         if num == string_of_numbers_to_show[i]:
             colored_digit_to_add = f"{Fore.GREEN}{num}{Style.RESET_ALL}"
         else:
