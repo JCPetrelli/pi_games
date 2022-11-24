@@ -1,12 +1,19 @@
 import sqlite3
 
+
 def create_database(database_name):
+    '''
+    Function to create a sqlite database connection and cursor
+    '''
     conn = sqlite3.connect(f'{database_name}.db')
     c = conn.cursor()
     return conn, c
 
 # Check if table already exists. Otherwise create it
 def create_table(conn, c, table_name):
+    '''
+    Creating table 'sessions' if not existing yet.
+    '''
     table_name = 'sessions'
     c.execute(f"""SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';""")
     result = c.fetchall()
@@ -24,7 +31,8 @@ def create_table(conn, c, table_name):
         conn.commit()
 
 def add_new_session(conn, c, session_dictionary):
-    c.execute('''INSERT INTO sessions VALUES (:game_no, :date, :mistakes_no, :mistakes, :time, :pi_series)''', session_dictionary)
+    c.execute('''INSERT INTO sessions VALUES
+    (:game_no, :date, :mistakes_no, :mistakes, :time, :pi_series)''', session_dictionary)
     conn.commit()
 
 
