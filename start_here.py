@@ -234,11 +234,19 @@ def game_4():
     # Create String of 100 numbers
     string_of_100_numbers = "".join(list_of_100_numbers)
 
+    # Add a space every 10 digits for readability
+    string_of_100_numbers_with_spaces = ''
+    for index, digit in enumerate(string_of_100_numbers):
+        index = index+1
+        string_of_100_numbers_with_spaces+=digit
+        if index % 10 == 0:
+            string_of_100_numbers_with_spaces+=" "
+
     print(Fore.GREEN + f'''
 
 πππππππππππππππππππππππππππ
 π                         
-π      {string_of_100_numbers}         
+π      {string_of_100_numbers_with_spaces}         
 π                         
 πππππππππππππππππππππππππππ
 
